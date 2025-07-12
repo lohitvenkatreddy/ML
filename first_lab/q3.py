@@ -10,7 +10,8 @@ for i in range(n):
         val = int(input("enter element: "))
         row.append(val)
     elements.append(row)
-A = np.array(elements)
-m = int(input("enter power m: "))
-res = matrix_power(A, m)
-print(res)
+if __name__ == "__main__":
+    A = np.array(elements)
+    m = int(input("enter power m: "))
+    res = matrix_power(A, m)
+    print(res)
