@@ -7,8 +7,8 @@ def count_sum(in_list,target_sum):
                             if in_list[i] + in_list[j] == target_sum:
                                     count_10 +=1
             return count_10
-
-s_list = [2,7,4,1,3,6]
-target_sum = 10
-p_count = count_sum(s_list,target_sum)
-print("number of pairs with sum 10 are : ", p_count)
+if __name__ == "__main__":
+    s_list = [2,7,4,1,3,6]
+    target_sum = 10
+    p_count = count_sum(s_list,target_sum)
+    print("number of pairs with sum 10 are : ", p_count)

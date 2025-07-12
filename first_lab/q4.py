@@ -6,7 +6,8 @@ def max_char(s):
     freq = Counter(s)
     ch, cnt = max(freq.items(), key=lambda x: x[1])
     return ch, cnt
-txt = input("Enter a string: ")
-c, n = max_char(txt)
-print("Highest occurring character:", c)
-print("Count:", n)
+if __name__ == "__main__":
+    txt = input("Enter a string: ")
+    c, n = max_char(txt)
+    print("Highest occurring character:", c)
+    print("Count:", n)
