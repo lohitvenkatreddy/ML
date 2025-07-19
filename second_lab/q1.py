@@ -1,35 +1,44 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_excel("labdata.xlsx", sheet_name=0)
+def load_purchase_data(file_path, sheet_name):
+    return pd.read_excel(file_path, sheet_name=sheet_name)
 
-# Drop unnamed or empty columns
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+def get_matrices(data, A_columns, C_column):
+    A = data[A_columns].values
+    C = data[C_column].values.reshape(-1, 1)
+    return A, C
 
-# Automatically detect numeric columns between first and last
-product_columns = df.columns[1:-1]
-target_column = df.columns[-1]
+def get_dimensionality(A):
+    return A.shape[1]
 
-A_df = df[product_columns]
-C_series = df[target_column]
+def get_num_vectors(A):
+    return A.shape[0]
 
-A_df = A_df.apply(pd.to_numeric, errors='coerce')
-C_series = pd.to_numeric(C_series, errors='coerce')
+def get_rank(A):
+    return np.linalg.matrix_rank(A)
 
-A = A_df.fillna(0).values
-C = C_series.fillna(0).values
+def compute_product_costs(A, C):
+    A_pinv = np.linalg.pinv(A)
+    X = A_pinv @ C
+    return X
 
-dimensionality = A.shape[1]
-num_vectors = A.shape[0]
-rank = np.linalg.matrix_rank(A)
+if __name__ == "__main__":
+    file_path = "LabData.xlsx"
+    sheet_name = "Purchase data"
+    A_columns = ['Candies (#)', 'Mangoes (Kg)', 'Milk Packets (#)']
+    C_column = 'Payment (Rs)'
 
-A_pinv = np.linalg.pinv(A)
-X = A_pinv @ C
+    data = load_purchase_data(file_path, sheet_name)
+    A, C = get_matrices(data, A_columns, C_column)
+    dimensionality = get_dimensionality(A)
+    num_vectors = get_num_vectors(A)
+    rank_A = get_rank(A)
+    product_costs = compute_product_costs(A, C)
 
-cost_per_product = pd.Series(X, index=product_columns)
-
-print("Dimensionality of the vector space:", dimensionality)
-print("Number of vectors in the vector space:", num_vectors)
-print("Rank of Matrix A:", rank)
-print("Estimated cost per product:")
-print(cost_per_product)
+    print(f"Dimensionality of vector space: {dimensionality}")
+    print(f"Number of vectors in vector space: {num_vectors}")
+    print(f"Rank of Matrix A: {rank_A}")
+    print("\nCost of each product:")
+    for i, cost in enumerate(product_costs, start=1):
+        print(f"Product {i}: Rs. {cost[0]:.2f}")
