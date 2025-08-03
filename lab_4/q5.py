@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
+
+def generate_training_data():
+    X = np.random.uniform(1, 10, (20, 2))
+    y = np.array([0 if sum(point) < 12 else 1 for point in X])
+    return X, y
+
+def generate_test_grid():
+    x, y = np.meshgrid(np.arange(0, 10.1, 0.1), np.arange(0, 10.1, 0.1))
+    return np.c_[x.ravel(), y.ravel()]
+
+# ==== MAIN ====
+X_train, y_train = generate_training_data()
+X_test = generate_test_grid()
+k_values = [1, 3, 5, 10]
+
+plt.figure(figsize=(16, 10))
+for i, k in enumerate(k_values):
+    model = KNeighborsClassifier(n_neighbors=k)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    plt.subplot(2, 2, i + 1)
+    plt.scatter(X_test[:, 0], X_test[:, 1], c=y_pred, cmap='bwr', alpha=0.3, s=5)
+    plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap='bwr', edgecolor='k', s=50)
+    plt.title(f"A5: k = {k}")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+
+plt.tight_layout()
+plt.show()
