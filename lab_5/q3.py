@@ -56,3 +56,6 @@ if __name__ == "__main__":
 
     print("Train - MSE, RMSE, MAPE, R²:", train_metrics)
     print("Test  - MSE, RMSE, MAPE, R²:", test_metrics)
+
+# Your MAPE values are enormous (on the order of 10 12 %). This is because MAPE blows up when your target variable has many zeros (common in "failure" since most drives don’t fail). 
+# You can’t divide by zero in MAPE, so sklearn treats it in a way that leads to huge values.
